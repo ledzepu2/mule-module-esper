@@ -1,0 +1,11 @@
+<!-- BEGIN_INCLUDE(esper:send-event) -->
+    <esper:send event="#[payload:]" />
+<!-- END_INCLUDE(esper:send-event) -->
+
+<!-- BEGIN_INCLUDE(esper:listen) -->
+    <esper:listen statement="select count(*) from org.mule.api.MuleMessage.win:time_batch(10, 'FORCE_UPDATE, START_EAGER') having count(*) < 5" />
+<!-- END_INCLUDE(esper:listen) -->
+
+<!-- BEGIN_INCLUDE(esper:get-event-property) -->
+    <esper:get-event-property property="count(*)" />
+<!-- END_INCLUDE(esper:get-event-property) -->

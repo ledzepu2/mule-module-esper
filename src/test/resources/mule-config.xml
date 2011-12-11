@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Mule Development Kit
+    Copyright 2010-2011 (c) MuleSoft, Inc.  All rights reserved.  http://www.mulesoft.com
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns:esper="http://www.mulesoft.org/schema/mule/esper"
+
+      xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/3.2/mule-vm.xsd
+        http://www.mulesoft.org/schema/mule/esper http://www.mulesoft.org/schema/mule/esper/1.0/mule-esper.xsd">
+
+    <esper:config configuration="esper-config.xml"/>
+
+    <flow name="testFlow">
+        <vm:inbound-endpoint path="in"/>
+        <esper:send eventPayload-ref="#[payload:]"/>
+        <vm:outbound-endpoint path="out"/>
+    </flow>
+
+    <flow name="Event Listener Flow">
+        <esper:listen statement="select count(*) from TestEvent
+                            .win:time_batch(5, 'FORCE_UPDATE, START_EAGER') having count(*) &gt; 0"/>
+        <esper:get-event-property key="count(*)"/>
+        <vm:outbound-endpoint path="events"/>
+    </flow>
+
+</mule>

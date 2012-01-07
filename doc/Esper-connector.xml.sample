@@ -9,3 +9,7 @@
 <!-- BEGIN_INCLUDE(esper:get-event-property) -->
     <esper:get-event-property property="count(*)" />
 <!-- END_INCLUDE(esper:get-event-property) -->
+
+<!-- BEGIN_INCLUDE(esper:get-map-event-properties) -->
+    <esper:get-map-event-properties/>
+<!-- END_INCLUDE(esper:get-map-event-properties) -->

@@ -136,4 +136,17 @@ public class EsperConnector implements MuleContextAware {
     public Object getEventProperty(@Payload EventBean event, String key) {
         return event.get(key);
     }
+
+    /**
+     * Utility transformer to extract the properties from a <code>MapEventBean</code>.
+     * <p/>
+     * {@sample.xml ../../../doc/Esper-connector.xml.sample esper:get-map-event-properties}
+     *
+     * @param event The <code>MapEventBean</code> to transform.
+     * @return The event's properties
+     */
+    @Processor
+    public Object getMapEventProperties(@Payload MapEventBean event) {
+        return event.getProperties();
+    }
 }

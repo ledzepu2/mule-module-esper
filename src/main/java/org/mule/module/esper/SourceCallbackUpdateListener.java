@@ -21,10 +21,21 @@ public class SourceCallbackUpdateListener implements UpdateListener {
         this.sourceCallback = sourceCallback;
     }
 
+    // ToDo Figure out how to deal with newEvents vs. oldEvents intelligently
     public void update(EventBean[] newEvents, EventBean[] oldEvents) {
+
+        /*
+        ToDo this should probably be made configurable, giving the user the option to return a NullPayload
+        instead of suppressing null events.
+         */
+        if (newEvents == null) {
+            logger.debug("Null events collection received");
+            return;
+        }
 
         for (EventBean event : newEvents) {
             try {
+
                 sourceCallback.process(event);
             } catch (Exception e) {
                 logger.error("Could not process event: " + event, e);

@@ -21,6 +21,7 @@
 package org.mule.module.esper;
 
 import com.espertech.esper.client.*;
+import com.espertech.esper.event.bean.BeanEventBean;
 import com.espertech.esper.event.map.MapEventBean;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -146,7 +147,16 @@ public class EsperConnector implements MuleContextAware {
      * @return The event's properties
      */
     @Processor
-    public Object getMapEventProperties(@Payload MapEventBean event) {
-        return event.getProperties();
+    public Object getMapEventProperties(@Payload EventBean event) {
+
+        if (event instanceof MapEventBean) {
+
+            return ((MapEventBean) event).getProperties();
+        } else {
+            logger.warn("get-map-event-properties received an EventBean that isn't an instance of MapEventBean, returning" +
+                    "the original EventBean.");
+            return event;
+        }
     }
+
 }

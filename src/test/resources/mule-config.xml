@@ -26,7 +26,7 @@
 
       xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.2/mule.xsd
         http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/3.2/mule-vm.xsd
         http://www.mulesoft.org/schema/mule/esper http://www.mulesoft.org/schema/mule/esper/1.0/mule-esper.xsd">
 
@@ -41,7 +41,7 @@
     <flow name="Event Listener Flow">
         <esper:listen statement="select count(*) from TestEvent
                             .win:time_batch(5, 'FORCE_UPDATE, START_EAGER') having count(*) &gt; 0"/>
-        <esper:get-event-property key="count(*)"/>
+        <expression-transformer evaluator="map-payload" expression="count(*)" />
         <vm:outbound-endpoint path="events"/>
     </flow>
 

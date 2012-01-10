@@ -2,6 +2,8 @@ package org.mule.module.esper;
 
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
+import com.espertech.esper.event.bean.BeanEventBean;
+import com.espertech.esper.event.map.MapEventBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.api.callback.SourceCallback;
@@ -35,8 +37,7 @@ public class SourceCallbackUpdateListener implements UpdateListener {
 
         for (EventBean event : newEvents) {
             try {
-
-                sourceCallback.process(event);
+                sourceCallback.process(event.getUnderlying());
             } catch (Exception e) {
                 logger.error("Could not process event: " + event, e);
             }

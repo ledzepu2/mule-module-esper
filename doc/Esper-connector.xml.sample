@@ -7,7 +7,7 @@
 <!-- END_INCLUDE(esper:listen) -->
 
 <!-- BEGIN_INCLUDE(esper:get-event-property) -->
-    <esper:get-event-property property="count(*)" />
+    <esper:get-event-property key="count(*)" />
 <!-- END_INCLUDE(esper:get-event-property) -->
 
 <!-- BEGIN_INCLUDE(esper:get-map-event-properties) -->

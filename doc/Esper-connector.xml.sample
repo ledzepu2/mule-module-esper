@@ -7,5 +7,7 @@
 <!-- END_INCLUDE(esper:listen) -->
 
 <!-- BEGIN_INCLUDE(esper:filter) -->
-    <esper:listen statement="select case when 1>0 then true else false end from org.mule.api.MuleMessage.win:time_batch(10, 'FORCE_UPDATE, START_EAGER') " />
+<esper:filter eventPayload-ref="#[payload:]"
+                      statement="select case when count(*) > 3 then false else true end from TestEvent.win:time(5 min)"
+                      key="case when count(*)>3 then false else true end"/>
 <!-- END_INCLUDE(esper:filter) -->

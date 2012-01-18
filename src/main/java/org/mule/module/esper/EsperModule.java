@@ -43,9 +43,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Mule Module for Esper.
+ * A Mule Module for <a href="http://esper.codehaus.org/">Esper</a>, a GPL licensed complex event processing
+ * engine.
  *
- * @author MuleSoft, Inc.
+ * @author John D'Emic <john.demic@mulesoft.com>
  */
 @Module(name = "esper", schemaVersion = "1.0", poolable = false)
 public class EsperModule implements MuleContextAware {
@@ -59,10 +60,9 @@ public class EsperModule implements MuleContextAware {
     private Map<String, EPStatement> filterStatements = new HashMap<String, EPStatement>();
 
     /**
-     * The optional location of an Esper config file.
+     * The location of the Esper config file.  All event types need to be defined here.
      */
     @Configurable
-    @Optional
     private String configuration;
 
 
@@ -95,6 +95,10 @@ public class EsperModule implements MuleContextAware {
 
     /**
      * Sends events to an Esper event stream.
+     * <p/>
+     * Events can be Java objects, Maps or an XML <code>Node</code>.  All event types must be registered in the
+     * Esper configuration.
+     * <p/>
      * <p/>
      * {@sample.xml ../../../doc/Esper-connector.xml.sample esper:send-event}
      *

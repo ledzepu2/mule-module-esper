@@ -128,13 +128,15 @@ public class EsperModule implements MuleContextAware {
      * <p/>
      * {@sample.xml ../../../doc/Esper-connector.xml.sample esper:filter}
      *
-     * @param eventPayload The event to be injected into the event stream.
+     * @param eventPayload The event to be injected into the event stream.  This is useful if your filter statement
+     *                     relies on the event being injected into the stream beforehand.
      * @param statement    the EPL statement
      * @param key          the key of the result to evaluate from the query
      * @param afterChain   the <code>SourceCallback</code>
      */
     @Processor(intercepting = true)
-    public synchronized void filter(Object eventPayload, String statement, String key, InterceptCallback afterChain) {
+    public synchronized void filter(@Optional Object eventPayload, String statement, String key,
+                                    InterceptCallback afterChain) {
 
         /*
          ToDo it would be nice if we didn't have to synchronize this entire method.  Despite the use

@@ -21,7 +21,11 @@
 package org.mule.module.esper;
 
 import org.mule.api.MuleMessage;
+import org.mule.api.construct.FlowConstruct;
+import org.mule.api.processor.MessageProcessor;
+import org.mule.construct.Flow;
 import org.mule.module.client.MuleClient;
+import org.mule.module.esper.config.SendMessageProcessor;
 import org.mule.tck.FunctionalTestCase;
 
 import org.junit.Test;
@@ -46,6 +50,24 @@ public class EsperModuleTest extends FunctionalTestCase {
         MuleMessage event = client.request("vm://events", 15000);
         assertNotNull(event);
         assertEquals(1L, event.getPayload());
+    }
+
+    @Test
+    public void testCanFilterOnEvents() throws Exception {
+        MuleClient client = new MuleClient(muleContext);
+        for (int i = 0; i < 4; i++) {
+            client.dispatch("vm://filtered.in", new DummyEvent(), null);
+        }
+
+        int receivedCount = 0;
+
+        for (int i = 0; i < 4; i++) {
+            MuleMessage response = client.request("vm://filtered.out", 15000);
+            assertNotNull(response);
+            receivedCount++;
+        }
+
+        assertEquals(1, receivedCount);
     }
 
 }

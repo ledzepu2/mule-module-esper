@@ -41,8 +41,21 @@
     <flow name="Event Listener Flow">
         <esper:listen statement="select count(*) from TestEvent
                             .win:time_batch(5, 'FORCE_UPDATE, START_EAGER') having count(*) &gt; 0"/>
-        <expression-transformer evaluator="map-payload" expression="count(*)" />
+        <expression-transformer evaluator="map-payload" expression="count(*)"/>
         <vm:outbound-endpoint path="events"/>
+    </flow>
+
+    <flow name="Event Rate Limit Flow">
+        <vm:inbound-endpoint path="filtered.in"/>
+        <esper:send eventPayload-ref="#[payload:]"/>
+        <esper:filter statement="select count(*) from TestEvent.win:time(5 min)"
+                      key="count(*)"/>
+
+
+        <!--<esper:filter statement="select case when count(*) > 1 then false else true end from-->
+        <!--TestEvent.win:time_batch(120 sec, 'FORCE_UPDATE, START_EAGER')"-->
+        <!--key="case when count(*)>1 then false else true end"/>-->
+        <vm:outbound-endpoint path="filtered.out"/>
     </flow>
 
 </mule>

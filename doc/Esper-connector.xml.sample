@@ -5,3 +5,7 @@
 <!-- BEGIN_INCLUDE(esper:listen) -->
     <esper:listen statement="select count(*) from org.mule.api.MuleMessage.win:time_batch(10, 'FORCE_UPDATE, START_EAGER') having count(*) < 5" />
 <!-- END_INCLUDE(esper:listen) -->
+
+<!-- BEGIN_INCLUDE(esper:filter) -->
+    <esper:listen statement="select case when 1>0 then true else false end from org.mule.api.MuleMessage.win:time_batch(10, 'FORCE_UPDATE, START_EAGER') " />
+<!-- END_INCLUDE(esper:filter) -->

@@ -32,24 +32,32 @@ import org.mule.api.MuleMessage;
 import org.mule.api.annotations.*;
 import org.mule.api.annotations.param.Optional;
 import org.mule.api.annotations.param.Payload;
+import org.mule.api.callback.InterceptCallback;
 import org.mule.api.callback.SourceCallback;
 import org.mule.api.context.MuleContextAware;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Cloud Connector for Esper.
+ * Mule Module for Esper.
  *
  * @author MuleSoft, Inc.
  */
-@Connector(name = "esper", schemaVersion = "1.0")
-public class EsperConnector implements MuleContextAware {
+@Module(name = "esper", schemaVersion = "1.0", poolable = false)
+public class EsperModule implements MuleContextAware {
 
     protected transient Log logger = LogFactory.getLog(getClass());
 
     private EPServiceProvider esperServiceProvider;
 
     private MuleContext muleContext;
+
+    private Map<String, EPStatement> filterStatements = new HashMap<String, EPStatement>();
+
     /**
      * The optional location of an Esper config file.
      */
@@ -67,8 +75,7 @@ public class EsperConnector implements MuleContextAware {
         this.muleContext = muleContext;
     }
 
-
-    @Connect
+    @PostConstruct
     public void connect() throws ConnectionException {
         Configuration c = new Configuration();
 
@@ -80,20 +87,10 @@ public class EsperConnector implements MuleContextAware {
         esperServiceProvider = EPServiceProviderManager.getDefaultProvider(c);
     }
 
-    @Disconnect
+    @PreDestroy
     public void disconnect() {
         logger.debug("Destroying EsperServiceProvider");
         esperServiceProvider.destroy();
-    }
-
-    @ConnectionIdentifier
-    public String connectionId() {
-        return esperServiceProvider.getURI();
-    }
-
-    @ValidateConnection
-    public boolean isConnected() {
-        return esperServiceProvider != null;
     }
 
     /**
@@ -122,5 +119,50 @@ public class EsperConnector implements MuleContextAware {
         logger.debug("Listening for events with statement: " + statement);
         EPStatement s = esperServiceProvider.getEPAdministrator().createEPL(statement);
         s.addListener(new SourceCallbackUpdateListener(callback));
+    }
+
+
+    /**
+     * Filters messages that match the supplied EPL query.  The EPL query <b>must</b> return a Boolean
+     * value.
+     * <p/>
+     * {@sample.xml ../../../doc/Esper-connector.xml.sample esper:filter}
+     *
+     * @param statement  the EPL statement
+     * @param key        the key of the result to evaluate from the query
+     * @param afterChain the <code>SourceCallback</code>
+     */
+    @Processor(intercepting = true)
+    public synchronized void filter(String statement, String key, InterceptCallback afterChain) {
+
+        EPStatement filterStatement;
+
+        if (!filterStatements.containsKey(statement)) {
+            filterStatements.put(statement, esperServiceProvider.getEPAdministrator().createEPL(statement));
+        }
+        filterStatement = filterStatements.get(statement);
+
+        SafeIterator<EventBean> safeIterator = filterStatement.safeIterator();
+
+        try {
+
+            if (safeIterator.hasNext())
+                System.out.println("\n\n\n\n\n RESULT: " + safeIterator.next().get(key));
+//            Boolean result = (Boolean) safeIterator.next().get(key);
+//
+//            if (safeIterator.hasNext()) {
+//                logger.warn("Statement contains more then one response");
+//            }
+//
+//            if (!result) {
+//                afterChain.doNotContinue();
+//            }
+
+        } catch (Exception e) {
+            throw new EsperException(e);
+        } finally {
+            safeIterator.close();
+        }
+
     }
 }

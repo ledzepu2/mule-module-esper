@@ -6,5 +6,8 @@
 
     <event-type name="TestEvent" class="org.mule.module.esper.DummyEvent"/>
     <event-type name="mapEvent" class="java.util.Map"/>
+    <event-type name="xmlEvent">
+        <xml-dom root-element-name="event"/>
+    </event-type>
 
 </esper-configuration>

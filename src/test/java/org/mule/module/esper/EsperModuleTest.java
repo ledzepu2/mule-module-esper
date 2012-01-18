@@ -50,6 +50,7 @@ public class EsperModuleTest extends FunctionalTestCase {
         assertEquals(1L, event.getPayload());
     }
 
+    @Test
     public void testCanInsertAndListenForAMapEvent() throws Exception {
         MuleClient client = new MuleClient(muleContext);
         Map<String, String> mapEvent = new HashMap<String, String>();
@@ -64,9 +65,23 @@ public class EsperModuleTest extends FunctionalTestCase {
         MuleMessage event = client.request("vm://map.events", 15000);
         assertNotNull(event);
         assertEquals(1L, event.getPayload());
-
-
     }
+
+    @Test
+    public void testCanInsertAndListenForAnXMLEvent() throws Exception {
+        MuleClient client = new MuleClient(muleContext);
+        String xmlEvent = "<event><foo>1234</foo></event>";
+
+        client.dispatch("vm://xml.in", xmlEvent, null);
+
+        MuleMessage response = client.request("vm://xml.out", 15000);
+        assertNotNull(response);
+
+        MuleMessage event = client.request("vm://xml.events", 15000);
+        assertNotNull(event);
+        assertEquals(1L, event.getPayload());
+    }
+
 
     @Test
     public void testCanFilterOnEvents() throws Exception {
@@ -86,7 +101,6 @@ public class EsperModuleTest extends FunctionalTestCase {
         assertEquals(4, receivedCount);
         MuleMessage response = client.request("vm://filtered.out", 5000);
         assertNull(response);
-
     }
 
 }

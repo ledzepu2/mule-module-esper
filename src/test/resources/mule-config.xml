@@ -22,12 +22,14 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xmlns:spring="http://www.springframework.org/schema/beans"
       xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml"
       xmlns:esper="http://www.mulesoft.org/schema/mule/esper"
 
       xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.2/mule.xsd
         http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/3.2/mule-vm.xsd
+        http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/3.2/mule-xml.xsd
         http://www.mulesoft.org/schema/mule/esper http://www.mulesoft.org/schema/mule/esper/1.0/mule-esper.xsd">
 
     <esper:config configuration="esper-config.xml"/>
@@ -38,8 +40,16 @@
         <vm:outbound-endpoint path="out"/>
     </flow>
 
+    <flow name="XML Event Flow">
+        <vm:inbound-endpoint path="xml.in"/>
+        <byte-array-to-string-transformer/>
+        <mulexml:xml-to-dom-transformer returnClass="org.w3c.dom.Document"/>
+        <esper:send eventPayload-ref="#[payload:]"/>
+        <vm:outbound-endpoint path="xml.out"/>
+    </flow>
+
     <flow name="Map Event Flow">
-        <vm:inbound-endpoint path="map.in" />
+        <vm:inbound-endpoint path="map.in"/>
         <esper:send eventPayload-ref="#[payload:]" eventName="mapEvent"/>
         <vm:outbound-endpoint path="map.out"/>
     </flow>
@@ -56,6 +66,13 @@
                             .win:time_batch(5, 'FORCE_UPDATE, START_EAGER') having count(*) &gt; 0"/>
         <expression-transformer evaluator="map-payload" expression="count(*)"/>
         <vm:outbound-endpoint path="map.events"/>
+    </flow>
+
+    <flow name="XML Event Listener Flow">
+        <esper:listen statement="select count(*) from xmlEvent
+                            .win:time_batch(5, 'FORCE_UPDATE, START_EAGER') having count(*) &gt; 0"/>
+        <expression-transformer evaluator="map-payload" expression="count(*)"/>
+        <vm:outbound-endpoint path="xml.events"/>
     </flow>
 
 

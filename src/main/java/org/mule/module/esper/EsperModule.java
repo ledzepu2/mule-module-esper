@@ -136,6 +136,11 @@ public class EsperModule implements MuleContextAware {
     @Processor(intercepting = true)
     public synchronized void filter(Object eventPayload, String statement, String key, InterceptCallback afterChain) {
 
+        /*
+         ToDo it would be nice if we didn't have to synchronize this entire method.  Despite the use
+         of SafeIterator, however, the queries don't seem to work unless they're guarded.
+          */
+
         esperServiceProvider.getEPRuntime().sendEvent(eventPayload);
 
         EPStatement filterStatement;
@@ -150,8 +155,6 @@ public class EsperModule implements MuleContextAware {
         SafeIterator<EventBean> safeIterator = filterStatement.safeIterator();
 
         try {
-            //if (safeIterator.hasNext())
-            //  System.out.println("\n\n\n\n\n RESULT: " + safeIterator.next().get(key));
             Boolean result = (Boolean) safeIterator.next().get(key);
 
             if (safeIterator.hasNext()) {

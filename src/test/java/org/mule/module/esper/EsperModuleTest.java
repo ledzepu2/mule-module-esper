@@ -29,6 +29,7 @@ import org.mule.module.esper.config.SendMessageProcessor;
 import org.mule.tck.FunctionalTestCase;
 
 import org.junit.Test;
+import org.mule.transport.NullPayload;
 
 public class EsperModuleTest extends FunctionalTestCase {
     @Override
@@ -55,7 +56,7 @@ public class EsperModuleTest extends FunctionalTestCase {
     @Test
     public void testCanFilterOnEvents() throws Exception {
         MuleClient client = new MuleClient(muleContext);
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             client.dispatch("vm://filtered.in", new DummyEvent(), null);
         }
 
@@ -67,7 +68,10 @@ public class EsperModuleTest extends FunctionalTestCase {
             receivedCount++;
         }
 
-        assertEquals(1, receivedCount);
+        assertEquals(4, receivedCount);
+        MuleMessage response = client.request("vm://filtered.out", 5000);
+        assertNull(response);
+
     }
 
 }

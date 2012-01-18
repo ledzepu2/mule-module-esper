@@ -128,35 +128,40 @@ public class EsperModule implements MuleContextAware {
      * <p/>
      * {@sample.xml ../../../doc/Esper-connector.xml.sample esper:filter}
      *
-     * @param statement  the EPL statement
-     * @param key        the key of the result to evaluate from the query
-     * @param afterChain the <code>SourceCallback</code>
+     * @param eventPayload The event to be injected into the event stream.
+     * @param statement    the EPL statement
+     * @param key          the key of the result to evaluate from the query
+     * @param afterChain   the <code>SourceCallback</code>
      */
     @Processor(intercepting = true)
-    public synchronized void filter(String statement, String key, InterceptCallback afterChain) {
+    public synchronized void filter(Object eventPayload, String statement, String key, InterceptCallback afterChain) {
+
+        esperServiceProvider.getEPRuntime().sendEvent(eventPayload);
 
         EPStatement filterStatement;
 
         if (!filterStatements.containsKey(statement)) {
-            filterStatements.put(statement, esperServiceProvider.getEPAdministrator().createEPL(statement));
+            filterStatement = esperServiceProvider.getEPAdministrator().createEPL(statement);
+            filterStatements.put(statement, filterStatement);
+        } else {
+            filterStatement = filterStatements.get(statement);
         }
-        filterStatement = filterStatements.get(statement);
 
         SafeIterator<EventBean> safeIterator = filterStatement.safeIterator();
 
         try {
+            //if (safeIterator.hasNext())
+            //  System.out.println("\n\n\n\n\n RESULT: " + safeIterator.next().get(key));
+            Boolean result = (Boolean) safeIterator.next().get(key);
 
-            if (safeIterator.hasNext())
-                System.out.println("\n\n\n\n\n RESULT: " + safeIterator.next().get(key));
-//            Boolean result = (Boolean) safeIterator.next().get(key);
-//
-//            if (safeIterator.hasNext()) {
-//                logger.warn("Statement contains more then one response");
-//            }
-//
-//            if (!result) {
-//                afterChain.doNotContinue();
-//            }
+            if (safeIterator.hasNext()) {
+                logger.warn("Statement contains more then one response");
+            }
+
+            if (!result) {
+                logger.debug("Not passing message, filter expression evaluated to true");
+                afterChain.doNotContinue();
+            }
 
         } catch (Exception e) {
             throw new EsperException(e);

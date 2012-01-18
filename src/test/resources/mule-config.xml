@@ -47,14 +47,9 @@
 
     <flow name="Event Rate Limit Flow">
         <vm:inbound-endpoint path="filtered.in"/>
-        <esper:send eventPayload-ref="#[payload:]"/>
-        <esper:filter statement="select count(*) from TestEvent.win:time(5 min)"
-                      key="count(*)"/>
-
-
-        <!--<esper:filter statement="select case when count(*) > 1 then false else true end from-->
-        <!--TestEvent.win:time_batch(120 sec, 'FORCE_UPDATE, START_EAGER')"-->
-        <!--key="case when count(*)>1 then false else true end"/>-->
+        <esper:filter eventPayload-ref="#[payload:]"
+                      statement="select case when count(*) > 3 then false else true end from TestEvent.win:time(5 min)"
+                      key="case when count(*)>3 then false else true end"/>
         <vm:outbound-endpoint path="filtered.out"/>
     </flow>
 

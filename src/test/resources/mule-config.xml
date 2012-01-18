@@ -38,12 +38,26 @@
         <vm:outbound-endpoint path="out"/>
     </flow>
 
+    <flow name="Map Event Flow">
+        <vm:inbound-endpoint path="map.in" />
+        <esper:send eventPayload-ref="#[payload:]" eventName="mapEvent"/>
+        <vm:outbound-endpoint path="map.out"/>
+    </flow>
+
     <flow name="Event Listener Flow">
         <esper:listen statement="select count(*) from TestEvent
                             .win:time_batch(5, 'FORCE_UPDATE, START_EAGER') having count(*) &gt; 0"/>
         <expression-transformer evaluator="map-payload" expression="count(*)"/>
         <vm:outbound-endpoint path="events"/>
     </flow>
+
+    <flow name="Map Event Listener Flow">
+        <esper:listen statement="select count(*) from mapEvent
+                            .win:time_batch(5, 'FORCE_UPDATE, START_EAGER') having count(*) &gt; 0"/>
+        <expression-transformer evaluator="map-payload" expression="count(*)"/>
+        <vm:outbound-endpoint path="map.events"/>
+    </flow>
+
 
     <flow name="Event Rate Limit Flow">
         <vm:inbound-endpoint path="filtered.in"/>

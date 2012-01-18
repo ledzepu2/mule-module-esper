@@ -21,20 +21,20 @@
 package org.mule.module.esper;
 
 import com.espertech.esper.client.*;
-import com.espertech.esper.event.bean.BeanEventBean;
-import com.espertech.esper.event.map.MapEventBean;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.api.ConnectionException;
 import org.mule.api.MuleContext;
-import org.mule.api.MuleMessage;
-import org.mule.api.annotations.*;
+import org.mule.api.annotations.Configurable;
+import org.mule.api.annotations.Module;
+import org.mule.api.annotations.Processor;
+import org.mule.api.annotations.Source;
 import org.mule.api.annotations.param.Optional;
-import org.mule.api.annotations.param.Payload;
 import org.mule.api.callback.InterceptCallback;
 import org.mule.api.callback.SourceCallback;
 import org.mule.api.context.MuleContextAware;
+import org.w3c.dom.Node;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -99,11 +99,27 @@ public class EsperModule implements MuleContextAware {
      * {@sample.xml ../../../doc/Esper-connector.xml.sample esper:send-event}
      *
      * @param eventPayload The event to be injected into the event stream.
+     * @param eventName    The name of the event in the case of a <code>Map</code> payload.
      */
     @Processor
-    public void send(Object eventPayload) {
+    public void send(Object eventPayload, @Optional String eventName) {
         logger.debug(String.format("Sending event %s to stream", eventPayload));
-        esperServiceProvider.getEPRuntime().sendEvent(eventPayload);
+
+        /*
+   ToDo work out a way here to dynamically register event types and not cause listeners to fail on
+   Mule startup (chicken before egg.) */
+
+        if (eventPayload instanceof Map) {
+            if (StringUtils.isBlank(eventName)) {
+                throw new EsperException("event-name must be specified with map events");
+            }
+
+            esperServiceProvider.getEPRuntime().sendEvent((Map) eventPayload, eventName);
+        } else if (eventPayload instanceof Node) {
+            esperServiceProvider.getEPRuntime().sendEvent((Node) eventPayload);
+        } else {
+            esperServiceProvider.getEPRuntime().sendEvent(eventPayload);
+        }
     }
 
     /**

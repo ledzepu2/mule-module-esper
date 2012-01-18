@@ -5,5 +5,6 @@
                 http://www.espertech.com/schema/esper/esper-configuration-2.0.xsd">
 
     <event-type name="TestEvent" class="org.mule.module.esper.DummyEvent"/>
+    <event-type name="mapEvent" class="java.util.Map"/>
 
 </esper-configuration>

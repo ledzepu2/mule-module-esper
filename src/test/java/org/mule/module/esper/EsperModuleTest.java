@@ -20,16 +20,13 @@
  */
 package org.mule.module.esper;
 
+import org.junit.Test;
 import org.mule.api.MuleMessage;
-import org.mule.api.construct.FlowConstruct;
-import org.mule.api.processor.MessageProcessor;
-import org.mule.construct.Flow;
 import org.mule.module.client.MuleClient;
-import org.mule.module.esper.config.SendMessageProcessor;
 import org.mule.tck.FunctionalTestCase;
 
-import org.junit.Test;
-import org.mule.transport.NullPayload;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EsperModuleTest extends FunctionalTestCase {
     @Override
@@ -38,7 +35,7 @@ public class EsperModuleTest extends FunctionalTestCase {
     }
 
     @Test
-    public void testCanInsertAndListenForEvent() throws Exception {
+    public void testCanInsertAndListenForAnObjectEvent() throws Exception {
 
         MuleClient client = new MuleClient(muleContext);
         DummyEvent dummyEvent = new DummyEvent();
@@ -51,6 +48,24 @@ public class EsperModuleTest extends FunctionalTestCase {
         MuleMessage event = client.request("vm://events", 15000);
         assertNotNull(event);
         assertEquals(1L, event.getPayload());
+    }
+
+    public void testCanInsertAndListenForAMapEvent() throws Exception {
+        MuleClient client = new MuleClient(muleContext);
+        Map<String, String> mapEvent = new HashMap<String, String>();
+        mapEvent.put("foo", "1234");
+
+        client.dispatch("vm://map.in", mapEvent, null);
+
+        MuleMessage response = client.request("vm://map.out", 15000);
+        assertNotNull(response);
+        assertEquals("The output payload does not match the input payload", mapEvent, response.getPayload());
+
+        MuleMessage event = client.request("vm://map.events", 15000);
+        assertNotNull(event);
+        assertEquals(1L, event.getPayload());
+
+
     }
 
     @Test

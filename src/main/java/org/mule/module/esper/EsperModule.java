@@ -31,7 +31,6 @@ import org.mule.api.annotations.Module;
 import org.mule.api.annotations.Processor;
 import org.mule.api.annotations.Source;
 import org.mule.api.annotations.param.Optional;
-import org.mule.api.callback.InterceptCallback;
 import org.mule.api.callback.SourceCallback;
 import org.mule.api.context.MuleContextAware;
 import org.w3c.dom.Node;
@@ -156,7 +155,7 @@ public class EsperModule implements MuleContextAware {
      */
     @Processor(intercepting = true)
     public synchronized void filter(@Optional Object eventPayload, String statement, String key,
-                                    InterceptCallback afterChain) {
+                                    SourceCallback afterChain) {
 
         /*
          ToDo it would be nice if we didn't have to synchronize this entire method.  Despite the use
@@ -185,7 +184,8 @@ public class EsperModule implements MuleContextAware {
 
             if (!result) {
                 logger.debug("Not passing message, filter expression evaluated to true");
-                afterChain.doNotContinue();
+            } else {
+                afterChain.process();
             }
 
         } catch (Exception e) {

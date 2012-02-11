@@ -112,15 +112,19 @@
       <span id="masthead-title">Mule Esper Connector</span>
     
     <ul id="header-tabs" class="">
+    
     	<li id="guide"><a href="../../../../../../guide/install.html">
 	    	<span class="en">Install Guide</span>
     	</a></li>
+    
     	<li id="java"><a href="../../../../../../java/packages.html">
-	    	<span class="en">Java API</span>
+	    	<span class="en">Java API Reference</span>
     	</a></li>
+    
     	<li id="mule"><a href="../../../../../../mule/modules.html">
-	    	<span class="en">Mule API</span>
+	    	<span class="en">Mule API Reference</span>
     	</a></li>
+    
     </ul>
     </div>
     <div id="headerRight">
@@ -408,7 +412,7 @@ Summary:
 
     <tr>
         
-        <td colspan="4" class="jd-inheritance-class-cell"><a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">java.lang.Object</a></td>
+        <td colspan="4" class="jd-inheritance-class-cell">java.lang.Object</td>
     </tr>
     
 
@@ -533,7 +537,7 @@ org.mule.api.lifecycle.Disposable
 
     
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a></td>
+        <td class="jd-typecol">String</td>
         <td class="jd-linkcol">PHASE_NAME</td>
         <td class="jd-descrcol" width="100%"></td>
     </tr>
@@ -564,7 +568,7 @@ org.mule.api.lifecycle.Initialisable
 
     
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a></td>
+        <td class="jd-typecol">String</td>
         <td class="jd-linkcol">PHASE_NAME</td>
         <td class="jd-descrcol" width="100%"></td>
     </tr>
@@ -595,7 +599,7 @@ org.mule.api.lifecycle.Startable
 
     
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a></td>
+        <td class="jd-typecol">String</td>
         <td class="jd-linkcol">PHASE_NAME</td>
         <td class="jd-descrcol" width="100%"></td>
     </tr>
@@ -626,7 +630,7 @@ org.mule.api.lifecycle.Stoppable
 
     
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a></td>
+        <td class="jd-typecol">String</td>
         <td class="jd-linkcol">PHASE_NAME</td>
         <td class="jd-descrcol" width="100%"></td>
     </tr>
@@ -676,7 +680,7 @@ org.mule.api.lifecycle.Stoppable
           private
           
           
-          <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a></nobr></td>
+          String</nobr></td>
           <td class="jd-linkcol"><a href="../../../../../../org/mule/module/esper/EsperModule.html#configuration">configuration</a></td>
           <td class="jd-descrcol" width="100%">The location of the Esper config file.</td>
       </tr>
@@ -698,7 +702,7 @@ org.mule.api.lifecycle.Stoppable
           private
           
           
-          <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/util/Map.html">Map</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a>,&nbsp;EPStatement&gt;</nobr></td>
+          Map&lt;String,&nbsp;EPStatement&gt;</nobr></td>
           <td class="jd-linkcol"><a href="../../../../../../org/mule/module/esper/EsperModule.html#filterStatements">filterStatements</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
@@ -972,7 +976,7 @@ From class
             void</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../org/mule/module/esper/EsperModule.html#filter(java.lang.Object, java.lang.String, java.lang.String, org.mule.api.callback.SourceCallback)">filter</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a> eventPayload, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> statement, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> key, SourceCallback afterChain)</nobr>
+        <span class="sympad"><a href="../../../../../../org/mule/module/esper/EsperModule.html#filter(java.lang.Object, java.lang.String, java.lang.String, org.mule.api.callback.SourceCallback)">filter</a></span>(Object eventPayload, String statement, String key, SourceCallback afterChain)</nobr>
         
         <div class="jd-descrdiv">Filters messages that match the supplied EPL query.</div>
   
@@ -990,7 +994,7 @@ From class
             void</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../org/mule/module/esper/EsperModule.html#listen(java.lang.String, org.mule.api.callback.SourceCallback)">listen</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> statement, SourceCallback callback)</nobr>
+        <span class="sympad"><a href="../../../../../../org/mule/module/esper/EsperModule.html#listen(java.lang.String, org.mule.api.callback.SourceCallback)">listen</a></span>(String statement, SourceCallback callback)</nobr>
         
         <div class="jd-descrdiv">Listens for events matching the specified query statement.</div>
   
@@ -1008,7 +1012,7 @@ From class
             void</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../org/mule/module/esper/EsperModule.html#send(java.lang.Object, java.lang.String)">send</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a> eventPayload, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> eventName)</nobr>
+        <span class="sympad"><a href="../../../../../../org/mule/module/esper/EsperModule.html#send(java.lang.Object, java.lang.String)">send</a></span>(Object eventPayload, String eventName)</nobr>
         
         <div class="jd-descrdiv">Sends events to an Esper event stream.</div>
   
@@ -1026,7 +1030,7 @@ From class
             void</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../org/mule/module/esper/EsperModule.html#setConfiguration(java.lang.String)">setConfiguration</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> configuration)</nobr>
+        <span class="sympad"><a href="../../../../../../org/mule/module/esper/EsperModule.html#setConfiguration(java.lang.String)">setConfiguration</a></span>(String configuration)</nobr>
         
   </td></tr>
 
@@ -1062,7 +1066,7 @@ From class
           class="jd-expando-trigger-img" /></a>
 From class
 
-  <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">java.lang.Object</a>
+  java.lang.Object
 
 <div id="inherited-methods-java.lang.Object">
   <div id="inherited-methods-java.lang.Object-list"
@@ -1081,7 +1085,7 @@ From class
             
             
             
-            <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a></nobr>
+            Object</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad">clone</span>()</nobr>
@@ -1100,7 +1104,7 @@ From class
             boolean</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">equals</span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a> arg0)</nobr>
+        <span class="sympad">equals</span>(Object arg0)</nobr>
         
   </td></tr>
 
@@ -1129,7 +1133,7 @@ From class
             final
             
             
-            <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Class.html">Class</a>&lt;?&gt;</nobr>
+            Class&lt;?&gt;</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad">getClass</span>()</nobr>
@@ -1193,7 +1197,7 @@ From class
             
             
             
-            <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a></nobr>
+            String</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad">toString</span>()</nobr>
